@@ -64,15 +64,21 @@ export async function POST(req: NextRequest) {
     // Generate AI outreach + save to DB
     const leads = await Promise.all(
       scraped.map(async (lead) => {
-        const outreach = await generateOutreach(lead, { what, who, where })
+        // Graceful fallback if AI is overloaded or fails
+        let outreach = { email: '', linkedin: '' }
+        try {
+          outreach = await generateOutreach(lead, { what, who, where })
+        } catch (aiErr) {
+          console.warn('Outreach generation failed (non-fatal):', aiErr instanceof Error ? aiErr.message : aiErr)
+        }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: saved } = await (supabase.from('leads') as any)
           .insert({
             search_id: search.id,
             user_id: user.id,
             ...lead,
-            ai_email_text: outreach.email,
-            ai_linkedin_text: outreach.linkedin,
+            ai_email_text: outreach.email || null,
+            ai_linkedin_text: outreach.linkedin || null,
           })
           .select()
           .single()
