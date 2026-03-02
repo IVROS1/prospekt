@@ -3,38 +3,47 @@
 import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createBrowserClient } from '@/lib/supabase'
-import { Zap, ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 
 function SignupForm() {
-  const [email, setEmail] = useState('')
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [loading, setLoading]   = useState(false)
+  const [sent, setSent]         = useState(false)
   const searchParams = useSearchParams()
-  const supabase = createBrowserClient()
+  const supabase     = createBrowserClient()
 
-  const plan = searchParams.get('plan') || 'free'
-  const what = searchParams.get('what') || ''
-  const who = searchParams.get('who') || ''
+  const plan  = searchParams.get('plan')  || 'free'
+  const what  = searchParams.get('what')  || ''
+  const who   = searchParams.get('who')   || ''
   const where = searchParams.get('where') || ''
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     try {
+      // Use NEXT_PUBLIC_APP_URL for a stable redirect URL (must be in Supabase allowlist)
+      const base = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
       const { error } = await supabase.auth.signUp({
-        email, password,
+        email,
+        password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${base}/auth/callback`,
           data: { plan, query_what: what, query_who: who, query_where: where },
         },
       })
       if (error) throw error
       setSent(true)
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Något gick fel')
+      const msg = err instanceof Error ? err.message : 'Något gick fel'
+      // Surface a more helpful message for the common redirect-URL error
+      if (msg.toLowerCase().includes('redirect')) {
+        toast.error('Kontakonfiguration saknas. Kontakta oss på hej@prospekt.app')
+      } else {
+        toast.error(msg)
+      }
     } finally {
       setLoading(false)
     }
@@ -42,58 +51,59 @@ function SignupForm() {
 
   if (sent) {
     return (
-      <div className="text-center py-6">
-        <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-100">
-          <span className="text-2xl">📬</span>
+      <div style={{ textAlign:'center', padding:'24px 0' }}>
+        <div style={{ width:52, height:52, borderRadius:12, background:'var(--gold-dim)', border:'1px solid var(--border-gold)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', fontSize:22 }}>
+          📬
         </div>
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Kolla din inbox!</h2>
-        <p className="text-slate-500 text-sm">Vi skickade en bekräftelselänk till <strong>{email}</strong></p>
+        <h2 style={{ fontSize:18, fontWeight:700, marginBottom:8 }}>Kolla din inbox!</h2>
+        <p style={{ fontSize:13, color:'var(--text-muted)' }}>
+          Vi skickade en bekräftelselänk till <strong style={{ color:'var(--text)' }}>{email}</strong>
+        </p>
       </div>
     )
   }
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Skapa konto</h1>
-      <p className="text-slate-500 text-sm mb-6">
-        {plan !== 'free' ? `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)}` : '5 leads gratis · Inget kreditkort'}
+      <h1 style={{ fontSize:22, fontWeight:700, marginBottom:6 }}>Skapa konto</h1>
+      <p style={{ fontSize:13, color:'var(--text-muted)', marginBottom:24 }}>
+        {plan !== 'free'
+          ? `Plan: ${plan.charAt(0).toUpperCase() + plan.slice(1)}`
+          : '5 leads gratis · Inget kreditkort'}
       </p>
 
-      <form onSubmit={handleSignup} className="space-y-4">
+      <form onSubmit={handleSignup} style={{ display:'flex', flexDirection:'column', gap:14 }}>
         <div>
-          <label className="text-xs font-medium text-slate-700 mb-1 block">E-post</label>
+          <label className="label" style={{ display:'block', marginBottom:6 }}>E-post</label>
           <input
             type="email" required value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="du@bolag.se"
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-slate-50 transition-all"
+            className="input"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-slate-700 mb-1 block">Lösenord</label>
+          <label className="label" style={{ display:'block', marginBottom:6 }}>Lösenord</label>
           <input
             type="password" required minLength={8} value={password}
             onChange={e => setPassword(e.target.value)}
             placeholder="Minst 8 tecken"
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-slate-50 transition-all"
+            className="input"
           />
         </div>
-        <button
-          type="submit" disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"
-        >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          Skapa konto <ArrowRight className="w-4 h-4" />
+        <button type="submit" disabled={loading} className="btn-gold" style={{ justifyContent:'center', width:'100%', padding:'12px' }}>
+          {loading && <Loader2 style={{ width:14, height:14, animation:'spin 1s linear infinite' }} />}
+          Skapa konto <ArrowRight style={{ width:14, height:14 }} />
         </button>
       </form>
 
-      <p className="text-center text-xs text-slate-400 mt-5">
+      <p style={{ textAlign:'center', fontSize:12, color:'var(--text-dim)', marginTop:20 }}>
         Har du redan ett konto?{' '}
-        <Link href="/login" className="text-indigo-600 hover:underline">Logga in</Link>
+        <Link href="/login" style={{ color:'var(--gold)', textDecoration:'none' }}>Logga in</Link>
       </p>
-      <p className="text-center text-xs text-slate-300 mt-2">
+      <p style={{ textAlign:'center', fontSize:11, color:'var(--text-dim)', marginTop:8 }}>
         Genom att skapa ett konto godkänner du våra{' '}
-        <Link href="/terms" className="underline">villkor</Link>.
+        <Link href="/terms" style={{ color:'var(--text-muted)', textDecoration:'underline' }}>villkor</Link>.
       </p>
     </>
   )
@@ -101,17 +111,23 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
-      <Link href="/" className="flex items-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-          <Zap className="w-4 h-4 text-white" />
+    <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px' }}>
+
+      {/* Grid bg */}
+      <div className="grid-bg" style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none' }} />
+
+      <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:380 }}>
+
+        {/* Logo */}
+        <Link href="/" style={{ display:'flex', justifyContent:'center', marginBottom:32, textDecoration:'none' }}>
+          <span className="font-mono" style={{ fontSize:13, letterSpacing:'3px', color:'var(--gold)', fontWeight:600 }}>PROSPEKT</span>
+        </Link>
+
+        <div className="card-gold" style={{ padding:32 }}>
+          <Suspense>
+            <SignupForm />
+          </Suspense>
         </div>
-        <span className="font-semibold text-slate-900">Prospekt</span>
-      </Link>
-      <div className="w-full max-w-sm bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-        <Suspense>
-          <SignupForm />
-        </Suspense>
       </div>
     </div>
   )
