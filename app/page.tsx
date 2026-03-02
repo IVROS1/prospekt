@@ -41,42 +41,42 @@ export default function LandingPage() {
       </nav>
 
       {/* ─── HERO ─── */}
-      <section className="pt-32 pb-20 px-6 text-center">
+      <section className="pt-32 pb-20 px-6 text-center overflow-hidden">
         <div className="max-w-3xl mx-auto">
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8 border border-indigo-100">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+          <div className="animate-fadeUp inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8 border border-indigo-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
             Söker nu i 50 000+ svenska bolag
           </div>
 
-          <h1 className="text-[56px] sm:text-[72px] leading-[1.05] font-bold text-gray-900 tracking-[-2px] mb-6">
+          <h1 className="animate-fadeUp delay-100 text-[56px] sm:text-[72px] leading-[1.05] font-bold text-gray-900 tracking-[-2.5px] mb-6">
             Hitta rätt kund.
             <br />
-            <span className="text-gray-400">Automatiskt.</span>
+            <span className="text-gray-300">Automatiskt.</span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed mb-10">
+          <p className="animate-fadeUp delay-200 text-lg sm:text-xl text-gray-500 max-w-xl mx-auto leading-relaxed mb-10">
             AI som hittar, kvalificerar och skriver outreach till svenska B2B-kunder —&nbsp;på&nbsp;60&nbsp;sekunder.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
-            <Link href="/signup" className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-7 py-3.5 rounded-full text-[15px] transition-colors w-full sm:w-auto justify-center">
+          <div className="animate-fadeUp delay-300 flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <Link href="/signup" className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 active:scale-[0.98] text-white font-semibold px-7 py-3.5 rounded-full text-[15px] transition-all w-full sm:w-auto justify-center shadow-sm">
               Kom igång gratis <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="#demo" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium px-7 py-3.5 rounded-full text-[15px] transition-colors border border-gray-200 hover:border-gray-300 bg-white w-full sm:w-auto justify-center">
+            <Link href="#demo" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium px-7 py-3.5 rounded-full text-[15px] transition-all border border-gray-200 hover:border-gray-300 hover:bg-gray-50 bg-white w-full sm:w-auto justify-center">
               Se demo
             </Link>
           </div>
 
-          <p className="text-xs text-gray-400">Fri plan · Inget kreditkort · Igång på 2 minuter</p>
+          <p className="animate-fadeUp delay-400 text-xs text-gray-400">Fri plan · Inget kreditkort · Igång på 2 minuter</p>
         </div>
       </section>
 
       {/* ─── PRODUCT DEMO ─── */}
       <section id="demo" className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl border border-gray-200/80 shadow-[0_32px_80px_-12px_rgba(0,0,0,0.12)] overflow-hidden">
+          <div className="animate-scaleIn delay-500 rounded-2xl border border-gray-200/80 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
             
             {/* Browser chrome */}
             <div className="bg-gray-50 border-b border-gray-200 px-5 py-3.5 flex items-center gap-3">

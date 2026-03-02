@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 
-const geist = Geist({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Prospekt — Hitta dina nästa kunder automatiskt',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv">
-      <body className={`${geist.className} antialiased bg-white`}>
+      <body className={`${inter.variable} font-sans antialiased bg-white`}>
         {children}
         <Toaster richColors position="top-right" />
       </body>
