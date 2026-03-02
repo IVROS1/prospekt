@@ -129,7 +129,7 @@ export default function LandingPage() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-[1.05] mb-6 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-[1.05] mb-6 tracking-tight">
             Hitta dina nästa
             <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -139,7 +139,7 @@ export default function LandingPage() {
             på 60 sekunder
           </h1>
 
-          <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-white/50 mb-10 max-w-xl mx-auto leading-relaxed px-2">
             Beskriv vem du säljer till. Vi hittar rätt bolag, rätt person och skriver
             personaliserad outreach på svenska — klar att skicka.
           </p>
@@ -188,25 +188,25 @@ export default function LandingPage() {
           </div>
 
           {/* Trust badges */}
-          <div className="flex items-center justify-center gap-6 mt-10 text-white/30 text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-10 text-white/30 text-xs sm:text-sm">
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-400" />
+              <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
               Ingen onboarding
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-400" />
+              <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
               Svensk marknad
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-400" />
+              <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
               Funkar med HubSpot
             </div>
           </div>
         </div>
       </section>
 
-      {/* MOCK PRODUCT PREVIEW */}
-      <section className="max-w-5xl mx-auto px-4 pb-24">
+      {/* MOCK PRODUCT PREVIEW — hidden on mobile */}
+      <section className="hidden md:block max-w-5xl mx-auto px-4 pb-24">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden shadow-2xl">
           {/* Window chrome */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
