@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv">
-      <body className={`${geist.className} antialiased bg-[#FAFAF9]`}>
+      <body className={`${geist.className} antialiased bg-[#0a0a0f]`}>
         {children}
         <Toaster richColors position="top-right" />
       </body>
