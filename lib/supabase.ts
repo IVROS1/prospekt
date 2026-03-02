@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient as createSSRBrowserClient } from '@supabase/ssr'
 
 export type Database = {
   public: {
@@ -58,9 +59,9 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholde
 const SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 const SUPABASE_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON
 
-// Browser client (for 'use client' components)
+// Browser client (for 'use client' components) — uses @supabase/ssr for proper cookie handling
 export const createBrowserClient = () =>
-  createClient<Database>(SUPABASE_URL, SUPABASE_ANON)
+  createSSRBrowserClient<Database>(SUPABASE_URL, SUPABASE_ANON)
 
 // Admin client (for API routes / webhook handlers — no RLS)
 export const adminClient = createClient<Database>(
