@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --background:   oklch(1 0 0);
@@ -12,7 +11,7 @@
   --border:       oklch(0.922 0 0);
   --card:         oklch(1 0 0);
   --radius:       0.75rem;
-  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans:    var(--font-inter, 'Inter', system-ui, -apple-system, sans-serif);
 }
 
 * {
