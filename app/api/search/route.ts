@@ -91,7 +91,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ search_id: search.id, leads })
   } catch (err) {
-    console.error('Search error:', err)
-    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('Search error:', msg)
+    return NextResponse.json({ error: 'Internal error', detail: msg }, { status: 500 })
   }
 }

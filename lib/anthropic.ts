@@ -49,7 +49,7 @@ LINKEDIN: [1-2 meningar. Direkt och personlig. MAX 40 ord.]
 Svara EXAKT i detta format, ingen annan text.`
 
   const response = await anthropic.messages.create({
-    model: 'claude-haiku-4-5',
+    model: 'claude-3-5-haiku-20241022',
     max_tokens: 400,
     messages: [{ role: 'user', content: prompt }],
   })
