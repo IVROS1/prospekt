@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { createBrowserClient } from '@/lib/supabase'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 function SignupForm() {
@@ -13,6 +14,7 @@ function SignupForm() {
   const [loading, setLoading]   = useState(false)
   const [sent, setSent]         = useState(false)
   const searchParams = useSearchParams()
+  const router       = useRouter()
   const supabase     = createBrowserClient()
 
   const plan  = searchParams.get('plan')  || 'free'
@@ -26,7 +28,7 @@ function SignupForm() {
     try {
       // Use NEXT_PUBLIC_APP_URL for a stable redirect URL (must be in Supabase allowlist)
       const base = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -35,7 +37,12 @@ function SignupForm() {
         },
       })
       if (error) throw error
-      setSent(true)
+      // If email confirmation is disabled, session is returned immediately
+      if (data.session) {
+        router.push('/dashboard')
+      } else {
+        setSent(true)
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Något gick fel'
       // Surface a more helpful message for the common redirect-URL error
