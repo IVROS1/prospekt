@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Zap, ArrowLeft, Loader2 } from 'lucide-react'
+import { Check, ArrowLeft, Loader2, Zap, Star } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { createBrowserClient } from '@/lib/supabase'
@@ -40,7 +40,7 @@ const PLANS = [
     name: 'Agency',
     price: 1999,
     leads: 99999,
-    features: ['Obegränsat leads', 'White-label', 'API-access', 'Webhook till alla CRM', 'Dedikerad support'],
+    features: ['Obegränsat leads', 'White-label rapport', 'API-access', 'Webhook till alla CRM', 'Dedikerad support'],
     cta: 'Kontakta oss',
     disabled: false,
     agency: true,
@@ -56,6 +56,7 @@ export default function PricingPage() {
       window.location.href = 'mailto:hej@prospekt.app?subject=Agency-plan'
       return
     }
+    if (planKey === 'free') return
 
     setLoading(planKey)
     try {
@@ -78,72 +79,141 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen py-20 px-4">
-      <div className="max-w-5xl mx-auto">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Tillbaka
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', position: 'relative' }}>
+
+      {/* Grid background */}
+      <div className="grid-bg" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
+
+      {/* Top bar */}
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 10,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(10,10,10,0.92)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 20px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <span className="font-mono" style={{ fontSize: 12, letterSpacing: '3px', color: 'var(--gold)', fontWeight: 600 }}>PROSPEKT</span>
+          </Link>
+          <Link href="/dashboard" style={{ textDecoration: 'none', fontSize: 13, color: 'var(--text-muted)' }}>
+            ← Dashboard
+          </Link>
+        </div>
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '60px 20px' }}>
+
+        {/* Back link */}
+        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', marginBottom: 48 }}>
+          <ArrowLeft style={{ width: 14, height: 14 }} /> Tillbaka
         </Link>
 
-        <div className="text-center mb-12">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-slate-900">Prospekt</span>
-          </Link>
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">Välj din plan</h1>
-          <p className="text-slate-500">Avsluta när du vill. Inga bindningstider.</p>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'var(--gold-dim)', border: '1px solid var(--border-gold)',
+            borderRadius: 20, padding: '6px 16px', marginBottom: 24,
+          }}>
+            <Zap style={{ width: 12, height: 12, color: 'var(--gold)' }} />
+            <span className="font-mono" style={{ fontSize: 11, color: 'var(--gold)', letterSpacing: '2px' }}>PRISSÄTTNING</span>
+          </div>
+          <h1 style={{ fontSize: 36, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.5px' }}>
+            Välj din plan
+          </h1>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)' }}>
+            Avsluta när du vill. Inga bindningstider.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-4">
+        {/* Plans grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
           {PLANS.map(plan => (
             <div
               key={plan.key}
-              className={`rounded-2xl p-6 border ${
-                plan.highlight
-                  ? 'bg-indigo-500 border-indigo-400 text-white shadow-xl'
-                  : 'bg-white border-slate-200'
-              }`}
+              style={{
+                borderRadius: 12,
+                padding: 24,
+                border: plan.highlight
+                  ? '1px solid var(--border-gold)'
+                  : '1px solid var(--border)',
+                background: plan.highlight
+                  ? 'linear-gradient(135deg, rgba(240,165,0,0.12) 0%, rgba(10,10,10,0) 100%)'
+                  : 'var(--bg-card)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
             >
+              {/* Popular badge */}
               {plan.highlight && (
-                <div className="text-indigo-100 text-xs font-bold mb-2">POPULÄRAST</div>
+                <div style={{
+                  position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
+                  background: 'var(--gold)', color: '#000', fontSize: 10, fontWeight: 700,
+                  fontFamily: 'var(--font-mono)', letterSpacing: '2px',
+                  padding: '4px 14px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 4,
+                }}>
+                  <Star style={{ width: 9, height: 9 }} />
+                  POPULÄRAST
+                </div>
               )}
-              <div className={`text-sm font-semibold mb-1 ${plan.highlight ? 'text-indigo-100' : 'text-slate-500'}`}>
-                {plan.name}
+
+              {/* Plan name */}
+              <div className="font-mono" style={{ fontSize: 10, letterSpacing: '2px', color: plan.highlight ? 'var(--gold)' : 'var(--text-muted)', marginBottom: 8 }}>
+                {plan.name.toUpperCase()}
               </div>
-              <div className={`text-3xl font-bold mb-1 ${plan.highlight ? 'text-white' : 'text-slate-900'}`}>
-                {plan.price === 0 ? '0 kr' : `${plan.price} kr`}
-                <span className={`text-sm font-normal ${plan.highlight ? 'text-indigo-200' : 'text-slate-400'}`}>
-                  {plan.price > 0 ? '/mån' : ''}
+
+              {/* Price */}
+              <div style={{ marginBottom: 4 }}>
+                <span style={{ fontSize: 32, fontWeight: 800, color: plan.highlight ? 'var(--gold)' : 'var(--text)' }}>
+                  {plan.price === 0 ? '0' : plan.price}
+                </span>
+                <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 2 }}>
+                  {plan.price === 0 ? ' kr' : ' kr/mån'}
                 </span>
               </div>
-              <div className={`text-xs mb-5 ${plan.highlight ? 'text-indigo-100' : 'text-slate-400'}`}>
+
+              {/* Leads */}
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 20 }}>
                 {plan.leads === 99999 ? 'Obegränsat' : plan.leads} leads/mån
               </div>
-              <ul className="space-y-2 mb-6">
+
+              {/* Features */}
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24, flex: 1 }}>
                 {plan.features.map(f => (
-                  <li key={f} className={`flex items-start gap-2 text-xs ${plan.highlight ? 'text-indigo-50' : 'text-slate-600'}`}>
-                    <Check className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${plan.highlight ? 'text-indigo-200' : 'text-green-500'}`} />
+                  <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: 'var(--text-muted)' }}>
+                    <Check style={{ width: 13, height: 13, marginTop: 2, flexShrink: 0, color: plan.highlight ? 'var(--gold)' : 'var(--green)' }} />
                     {f}
                   </li>
                 ))}
               </ul>
+
+              {/* CTA */}
               <button
-                onClick={() => !plan.disabled && handleUpgrade(plan.key)}
+                onClick={() => handleUpgrade(plan.key)}
                 disabled={plan.disabled || loading === plan.key}
-                className={`w-full text-sm font-medium py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors ${
-                  plan.disabled
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                    : plan.highlight
-                    ? 'bg-white text-indigo-600 hover:bg-indigo-50'
-                    : 'bg-slate-900 text-white hover:bg-slate-800'
-                }`}
+                className={plan.highlight ? 'btn-gold' : 'btn-outline'}
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  padding: '11px',
+                  fontSize: 13,
+                  opacity: plan.disabled ? 0.4 : 1,
+                  cursor: plan.disabled ? 'not-allowed' : 'pointer',
+                }}
               >
-                {loading === plan.key ? <Loader2 className="w-4 h-4 animate-spin" /> : plan.cta}
+                {loading === plan.key
+                  ? <Loader2 style={{ width: 14, height: 14, animation: 'spin 1s linear infinite' }} />
+                  : plan.cta}
               </button>
             </div>
           ))}
         </div>
+
+        {/* Footer note */}
+        <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-dim)', marginTop: 40 }}>
+          Betalning via Stripe. Säker och krypterad. Avsluta när som helst.
+        </p>
       </div>
     </div>
   )
